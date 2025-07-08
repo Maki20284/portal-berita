@@ -31,14 +31,14 @@ const MainContent = () => {
                 onError={(e) => e.target.src = 'https://placehold.co/800x450/CCCCCC/757575?text=Gambar+Utama'}
               />
               <div className="p-6 md:p-8">
-                <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3 hover:text-purple-600 transition duration-300">
+                <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3 hover:text-[#7E0063] transition duration-300">
                   <a href="#">{featuredArticle.title}</a>
                 </h2>
                 <p className="text-gray-600 mb-4 text-sm sm:text-base">{featuredArticle.excerpt}</p>
                 <div className="text-sm text-gray-500 mb-4">
-                  <span>Oleh {featuredArticle.author}</span> | <span>{featuredArticle.date}</span>
+                  <span className="text-[#7E0063]">Oleh {featuredArticle.author}</span> | <span>{featuredArticle.date}</span>
                 </div>
-                <a href="#" className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-md text-sm transition duration-300">
+                <a href="#" className="bg-black hover:bg-[#7E0063] text-white font-semibold py-2 px-6 rounded-md text-sm transition duration-300">
                   Baca Lebih Lanjut
                 </a>
               </div>

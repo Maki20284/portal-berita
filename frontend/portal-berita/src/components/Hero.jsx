@@ -9,7 +9,7 @@ const Hero = () => {
         <div className="flex flex-col md:flex-row items-center">
           {/* Konten Teks */}
           <div className="md:w-1/2 text-center md:text-left mb-10 md:mb-0">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 mb-4 leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 mb-4 leading-tight font-poppins">
               Suarakan Ceritamu, Temukan Duniamu.
             </h1>
             <p className="text-gray-600 text-base sm:text-lg lg:text-xl mb-8">
@@ -21,7 +21,6 @@ const Hero = () => {
           </div>
           {/* Ilustrasi */}
           <div className="md:w-1/2 flex justify-center md:justify-end">
-            {/* Ganti dengan SVG atau gambar ilustrasi Anda */}
             <img 
               src={ilustrasi}
               alt="Ilustrasi" 

@@ -3,50 +3,22 @@
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */
+// knexfile.js
 module.exports = {
-
   development: {
-    client: 'pg',
+    client: 'mysql2',
     connection: {
-      host: 'localhost',
-      user: 'postgres',
-      password: 'root',
-      database: 'portal-berita',
-      port: 5432,
-      ssl: false
-    }
-  },
-
-  staging: {
-    client: 'postgresql',
-    connection: {
-      database: 'portal-berita',
-      user:     'root',
-      password: 'root'
-    },
-    pool: {
-      min: 2,
-      max: 10
+      host: 'localhost',        
+      user: 'root',             
+      password: '',    
+      database: 'portal_berita'
     },
     migrations: {
-      tableName: 'knex_migrations'
-    }
-  },
-
-  production: {
-    client: 'postgresql',
-    connection: {
-      database: 'portal-berita',
-      user:     'root',
-      password: 'root'
+      tableName: 'knex_migrations',
+      directory: './migrations'
     },
-    pool: {
-      min: 2,
-      max: 10
-    },
-    migrations: {
-      tableName: 'knex_migrations'
+    seeds: {
+      directory: './seeds'
     }
   }
-
 };
