@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../../AuthContext';
 
@@ -21,25 +20,28 @@ export default function Login({ onLogin }) {
       localStorage.setItem('role', res.data.role);
       localStorage.setItem('nama', res.data.nama);
       
-      onLogin();
-      navigate('/beranda', { replace: true });
-
-      // Navigate based on role
       switch (res.data.role) {
-        case 'admin':
-          navigate('/dashboard/admin');
-          break;
-        case 'editor':
-          navigate('/dashboard/editor');
-          break;
-        case 'penulis':
-          navigate('/dashboard/penulis');
-          break;
-        case 'pembaca':
-        default:
-          navigate('/dashboard/pembaca');
-          break;
-      }
+      case 'admin':
+        navigate('/dashboard/admin');
+        break;
+      case 'editor':
+        navigate('/dashboard/editor');
+        break;
+      case 'penulis':
+        navigate('/dashboard/penulis');
+        break;
+      case 'pembaca':
+      default:
+        navigate('/beranda');
+        break;
+    }
+
+    if (onLogin) {
+      onLogin();
+    }
+
+    console.log("Login berhasil. Role:", res.data.role);
+
     } catch (err) {
       console.error('LOGIN ERROR', err);
       console.error('SERVER RESPONSE', err.response?.data);

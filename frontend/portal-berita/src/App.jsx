@@ -12,6 +12,7 @@ import { AuthContext } from './AuthContext';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+  console.log("Authenticated:", isAuthenticated);
 
   useEffect(() => {
     const handleStorage = () => {
@@ -34,13 +35,32 @@ const App = () => {
       <Route
         path="/"
         element={
-          isAuthenticated ? <Navigate to="/beranda" /> : <Navigate to="/login" />
+          isAuthenticated ? (
+            (() => {
+              const role = localStorage.getItem('role');
+              switch (role) {
+                case 'admin':
+                  return <Navigate to="/dashboard/admin" />;
+                case 'editor':
+                  return <Navigate to="/dashboard/editor" />;
+                case 'penulis':
+                  return <Navigate to="/dashboard/penulis" />;
+                case 'pembaca':
+                default:
+                  return <Navigate to="/beranda" />;
+              }
+            })()
+          ) : (
+            <Navigate to="/login" />
+          )
         }
       />
+
       <Route
         path="/login"
         element={
-          <Login onLogin={() => setIsAuthenticated(true)}/>
+          <Login onLogin={() => {setIsAuthenticated(true); // trigger re-render
+}} />
         }
       />
       <Route path="/register" element={<Register />} />

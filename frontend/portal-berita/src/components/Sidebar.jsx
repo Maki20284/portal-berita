@@ -26,7 +26,7 @@ export default function Sidebar({ onLogout, nama, email, foto, children }) {
       <nav className="flex-1 mt-6">
         <ul className="space-y-3">
           <li>
-            <Link to="/" className="flex items-center space-x-2 hover:text-blue-500">
+            <Link to="/beranda" className="flex items-center space-x-2 hover:text-blue-500">
               <FaHome /> <span>Beranda</span>
             </Link>
           </li>

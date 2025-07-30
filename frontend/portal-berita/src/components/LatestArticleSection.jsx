@@ -1,24 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ArticleCard from './ArticleCard.jsx';
+import axios from 'axios';
 
 const LatestArticlesSection = () => {
-  const latestArticles = [
-    { id: 1, imgSrc: "https://placehold.co/300x200/EDE9FE/5B21B6?text=Terbaru+1", title: "Panduan Lengkap Belajar React untuk Pemula", excerpt: "Mulai perjalanan Anda dalam pengembangan web modern dengan React." },
-    { id: 2, imgSrc: "https://placehold.co/300x200/F5F3FF/5B21B6?text=Terbaru+2", title: "Tips & Trik Tailwind CSS yang Wajib Diketahui", excerpt: "Optimalkan workflow styling Anda dengan Tailwind CSS." },
-    { id: 3, imgSrc: "https://placehold.co/300x200/EDE9FE/5B21B6?text=Terbaru+3", title: "Membangun API dengan Node.js dan Express", excerpt: "Dasar-dasar pembuatan backend yang tangguh." },
-  ];
+  const [latestArticles, setLatestArticles] = useState([]);
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await axios.get('https://winnicode.com/api/publikasi-berita', {
+          headers: {
+            Authorization: 'Bearer a42278524bee772194f2ad0e9ac88a5893aa733db4d1c684d89c2dc08b7f718a'
+          }
+        });
+        setLatestArticles(response.data); // pastikan format JSON array
+      } catch (error) {
+        console.error('Gagal memuat artikel:', error);
+      }
+    };
+
+    fetchArticles();
+  }, []);
 
   return (
     <section className="py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-2xl sm:text-3xl font-semibold text-[#7E0063] mb-8 text-center md:text-left">Artikel Terbaru</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {latestArticles.map(article => (
+          {latestArticles.map((article, index) => (
             <ArticleCard 
-              key={article.id}
-              imgSrc={article.imgSrc}
-              title={article.title}
-              excerpt={article.excerpt}
+              key={index}
+              imgSrc={article.gambar || "https://placehold.co/300x200?text=No+Image"}
+              title={article.judul}
+              excerpt={article.deskripsi?.slice(0, 100) + '...'} // asumsi field 'deskripsi' tersedia
             />
           ))}
         </div>
