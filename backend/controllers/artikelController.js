@@ -1,53 +1,48 @@
-const Artikel = require("../models/artikelModel.js");
+const Artikel = require('../models/artikelModel');
 
-exports.getAllArtikel = async (req, res) => {
+async function getAllArtikel(req, res) {
   try {
-    const [rows] = await Artikel.getAll();
-    res.json(rows[0]);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Gagal mengambil data artikel' });
+    const data = await Artikel.getAll();
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Gagal mengambil artikel' });
   }
-};
+}
 
-exports.getArtikel = async (req, res) => {
+async function getArtikel(req, res) {
   try {
-    const { id } = req.params;
-    const result = await Artikel.getById(id);
-
-    // Jika tidak ada data
-    if (!result || !result[0] || result[0].length === 0) {
-      return res.status(404).json({ error: "Artikel tidak ditemukan" });
-    }
-
-    res.json(result[0][0]); // Ambil baris pertama dari rows
-  } catch (error) {
-    console.error("Error ambil artikel:", error);
-    res.status(500).json({ error: "Gagal mengambil artikel" });
+    const id = req.params.id;
+    const artikel = await Artikel.getById(id);
+    if (!artikel) return res.status(404).json({ error: 'Artikel tidak ditemukan' });
+    res.json(artikel);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Gagal mengambil artikel' });
   }
-};
+}
 
-exports.createArtikel = async (req, res) => {
+async function createArtikel(req, res) {
   try {
-    const {
-      id_kategori,
-      id_penulis,
-      judul,
-      slug,
-      ringkasan,
-      konten,
-      url_thumbnail,
-      status,
-      tanggal_publikasi
-    } = req.body;
+    // Ambil id_penulis dari token
+    const id_penulis = req.user.id;
 
-    if (
-      !id_kategori || !id_penulis || !judul || !slug || !konten || !status
-    ) {
+    const { id_kategori, judul, konten, url_thumbnail } = req.body;
+
+    if (!id_kategori || !judul || !konten) {
       return res.status(400).json({ error: "Data tidak lengkap" });
     }
 
-   const result = await Artikel.create(
+    const slug = judul
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w-]+/g, '');
+
+    const ringkasan = konten.substring(0, 150);
+    const status = 'pending';
+    const now = new Date();
+
+    await Artikel.create({
       id_kategori,
       id_penulis,
       judul,
@@ -56,41 +51,44 @@ exports.createArtikel = async (req, res) => {
       konten,
       url_thumbnail,
       status,
-      tanggal_publikasi
-    );
+      tanggal_publikasi: now,
+      tanggal_dibuat: now,
+      tanggal_update: now
+    });
 
-    res.status(201).json({ message: "Artikel berhasil ditambahkan", data: result });
+    res.status(201).json({ message: "Artikel berhasil diajukan" });
   } catch (error) {
     console.error("Gagal menambahkan artikel:", error);
     res.status(500).json({ error: "Gagal menambahkan artikel" });
   }
-};
+}
 
-exports.updateArtikel = async (req, res) => {
+async function updateArtikel(req, res) {
   try {
-    const { id } = req.params;
-    const {
-      id_kategori,
-      id_penulis,
-      judul,
-      slug,
-      ringkasan,
-      konten,
-      url_thumbnail,
-      status,
-      tanggal_publikasi
-    } = req.body;
-
-    await Artikel.update(id, id_kategori, id_penulis, judul, slug, ringkasan, konten, url_thumbnail, status, tanggal_publikasi);
-
-    res.json({ message: "Artikel diperbarui" });
-  } catch (error) {
-    console.error("Error update artikel:", error);
-    res.status(500).json({ error: "Gagal memperbarui artikel" });
+    const id = req.params.id;
+    await Artikel.update(id, req.body);
+    res.json({ message: 'Artikel diperbarui' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Gagal update artikel' });
   }
-};
+}
 
-exports.deleteArtikel = async (req, res) => {
-  await Artikel.delete(req.params.id);
-  res.json({ message: "Artikel dihapus" });
+async function deleteArtikel(req, res) {
+  try {
+    const id = req.params.id;
+    await Artikel.delete(id);
+    res.json({ message: 'Artikel dihapus' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Gagal hapus artikel' });
+  }
+}
+
+module.exports = {
+  getAllArtikel,
+  getArtikel,
+  createArtikel,
+  updateArtikel,
+  deleteArtikel
 };

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { AuthContext } from '../../AuthContext';
 
-export default function Login() {
+export default function Login({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -14,11 +16,33 @@ export default function Login() {
         email,
         password,
       });
+
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('role', res.data.role);
       localStorage.setItem('nama', res.data.nama);
-      navigate('/beranda');
+      
+      onLogin();
+      navigate('/beranda', { replace: true });
+
+      // Navigate based on role
+      switch (res.data.role) {
+        case 'admin':
+          navigate('/dashboard/admin');
+          break;
+        case 'editor':
+          navigate('/dashboard/editor');
+          break;
+        case 'penulis':
+          navigate('/dashboard/penulis');
+          break;
+        case 'pembaca':
+        default:
+          navigate('/dashboard/pembaca');
+          break;
+      }
     } catch (err) {
+      console.error('LOGIN ERROR', err);
+      console.error('SERVER RESPONSE', err.response?.data);
       alert(err.response?.data?.message || 'Gagal login');
     }
   };

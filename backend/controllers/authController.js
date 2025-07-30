@@ -1,8 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Pengguna = require('../models/penggunaModel');
-
-const SECRET_KEY = 'my_secret_key_lokal';
+require('dotenv').config();
+const SECRET_KEY = process.env.JWT_SECRET;
 
 exports.register = async (req, res) => {
   try {
@@ -23,7 +23,8 @@ exports.register = async (req, res) => {
       nama,
       email,
       password: hashedPassword,
-      role
+      role,
+      profile_picture: null
     });
 
     res.json({ message: 'Registrasi berhasil' });
@@ -52,10 +53,11 @@ exports.login = async (req, res) => {
     }
 
     // Buat token
-    const token = jwt.sign({ id: user.id, role: user.role }, SECRET_KEY);
+    const token = jwt.sign({ id: user.id, role: user.role }, SECRET_KEY, { expiresIn: '1d' });
     res.json({ token, role: user.role, nama: user.nama });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Gagal login' });
   }
+
 };

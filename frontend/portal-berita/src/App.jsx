@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate} from 'react-router-dom';
 import Login from './pages/auth/LoginForm';
 import Register from './pages/auth/Register';
 import Beranda from './pages/Beranda';
@@ -6,12 +6,31 @@ import AdminDashboard from './pages/dashboards/Admin';
 import EditorDashboard from './pages/dashboards/Editor';
 import PenulisDashboard from './pages/dashboards/Penulis';
 import PembacaDashboard from './pages/dashboards/Pembaca';
+import TambahBerita from './pages/penulis/TambahBerita';
+import { useState, useEffect } from 'react';
+import { AuthContext } from './AuthContext';
 
 const App = () => {
-  const isAuthenticated = !!localStorage.getItem('token');
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+
+  useEffect(() => {
+    const handleStorage = () => {
+      setIsAuthenticated(!!localStorage.getItem('token'));
+    };
+
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
 
   return (
     <Routes>
+
+      <Route 
+        path="/dashboard/penulis/tambah-berita" 
+        element={<TambahBerita />
+        } 
+      />
+
       <Route
         path="/"
         element={
@@ -21,7 +40,7 @@ const App = () => {
       <Route
         path="/login"
         element={
-          isAuthenticated ? <Navigate to="/beranda" /> : <Login />
+          <Login onLogin={() => setIsAuthenticated(true)}/>
         }
       />
       <Route path="/register" element={<Register />} />

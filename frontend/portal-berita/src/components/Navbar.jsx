@@ -3,6 +3,13 @@ import { Link } from 'react-router-dom';
 import logo from '../assets/banner-logo.png';
 
 const Navbar = () => {
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('nama');
+    window.location.href = '/login';
+  }
+
   return (
     <nav className="flex items-center justify-between px-6 py-3 shadow-md bg-white font-poppins">
       {/* Logo */}
@@ -18,14 +25,11 @@ const Navbar = () => {
       </ul>
 
       {/* Buttons */}
-      {/* <div className="flex gap-6">
-        <button className="px-4 py-2 border border-black text-black rounded-lg text-sm font-semibold hover:bg-[#7E0063] hover:border-[#7E0063] hover:text-white transition duration-300">
-          Masuk
+      <div className="flex gap-6">
+        <button onClick={handleLogout} className="px-4 py-2 border border-black text-black rounded-lg text-sm font-semibold hover:bg-[#7E0063] hover:border-[#7E0063] hover:text-white transition duration-300">
+          Logout
         </button>
-        <button className="px-4 py-2 border border-black bg-black text-white rounded-lg text-sm font-semibold hover:bg-[#7E0063] hover:border-[#7E0063] hover:text-white transition duration-300">
-          Daftar
-        </button>
-      </div> */}
+      </div>
     </nav>
   );
 };

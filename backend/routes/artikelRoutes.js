@@ -1,10 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/artikelController.js");
+const auth = require("../middlewares/authMiddleware.js");
 
 router.get("/", controller.getAllArtikel);
 router.get("/:id", controller.getArtikel);
-router.post("/", controller.createArtikel);
+
+// ✅ Require login to create artikel
+router.post("/", auth, controller.createArtikel);
+
 router.put("/:id", controller.updateArtikel);
 router.delete("/:id", controller.deleteArtikel);
 
